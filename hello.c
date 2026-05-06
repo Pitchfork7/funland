@@ -8,6 +8,7 @@ Finally, turn on the PPU to display video.
 
 #include "neslib.h"
 
+
 // link the pattern table into CHR ROM
 //#link "chr_generic.s"
 void delaycode(unsigned char frames) {
@@ -23,6 +24,55 @@ void clear_screen(void) {
   vram_fill(0, 1024);
   ppu_on_all();
 }
+
+void startingseq() {
+  clear_screen();
+        vram_adr(NTADR_A(2,2));
+        vram_write("STARTING...", 11);
+        delaycode(60);
+        vram_adr(NTADR_A(2,4));
+        vram_write("3", 1);
+        delaycode(60);
+        vram_adr(NTADR_A(2,6));
+        vram_write("2", 1);
+        delaycode(60);
+        vram_adr(NTADR_A(2,8));
+        vram_write("1", 1);
+        delaycode(60);
+        vram_adr(NTADR_A(2,10));
+        vram_write("STARTED", 8);
+        delaycode(60);
+        clear_screen();
+        vram_adr(NTADR_A(2,2));
+        vram_write("MY NAME IS...", 13);
+        delaycode(60);
+        clear_screen();
+        vram_adr(NTADR_A(2,2));
+        vram_write("MY NAME IS", 10);
+        vram_adr(NTADR_A(2,4));
+        vram_write("JOY ENTERTAINMENT SYSTEM", 24);
+        delaycode(60);
+        vram_adr(NTADR_A(2,6));
+        vram_write("OR [JES]", 8);
+        delaycode(60);
+        vram_adr(NTADR_A(2,10));
+        vram_write("JES: WHAT IS YOUR NAME?", 23);
+        delaycode(90);
+        vram_adr(NTADR_A(2,12));
+        vram_write("???: Finn!", 10);
+        delaycode(60);
+        vram_adr(NTADR_A(2,14));
+        vram_write("JES: Hello...", 13);
+        delaycode(60);
+        vram_adr(NTADR_A(2,14));
+        vram_write("JES: Hello FINN", 15);
+  	delaycode(120);
+  	clear_screen();
+}
+
+
+
+
 
 // main function, run after console reset
 void main(void) {
@@ -93,23 +143,7 @@ void main(void) {
       if (gamestate == 0) {
       // 1. Tell the PPU where to write
       	gamestate = 1;
-        clear_screen();
-        vram_adr(NTADR_A(2,2));
-        vram_write("STARTING...", 11);
-        delaycode(60);
-        vram_adr(NTADR_A(2,4));
-        vram_write("3", 1);
-        delaycode(60);
-        vram_adr(NTADR_A(2,6));
-        vram_write("2", 1);
-        delaycode(60);
-        vram_adr(NTADR_A(2,8));
-        vram_write("1", 1);
-        delaycode(60);
-        vram_adr(NTADR_A(2,10));
-        vram_write("STARTED", 8);
-        delaycode(60);
-        clear_screen();
+        startingseq();
         
       }
     }
