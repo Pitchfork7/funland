@@ -97,6 +97,14 @@ void startingseq(void) {
 
 
 
+// games
+
+void rps(void) {
+  
+}
+
+
+
 
 
 // main function, run after console reset
@@ -147,7 +155,7 @@ void main(void) {
       if (gamestate == 2) {
         clear_screen();
         vram_adr(NTADR_A(2,2));		// set address
-  	vram_write("UP: ROCK PAPER SCISSORS", 23);
+  	vram_write("ROCK PAPER SCISSORS", 19);
         delaycode(60);
       }
    }
