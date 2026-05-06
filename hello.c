@@ -8,7 +8,9 @@ Finally, turn on the PPU to display video.
 
 #include "neslib.h"
 
-
+unsigned char rpsfirsttime = 1;
+unsigned char gamestate = 0;
+unsigned char pad;
 // link the pattern table into CHR ROM
 //#link "chr_generic.s"
 void delaycode(unsigned char frames) {
@@ -100,10 +102,12 @@ void startingseq(void) {
 // games
 
 void rpsgame(void) {
-  unsigned char choice = rand8() % 3;
+  unsigned char jeschoice;
+  pad = pad_trigger(0);
   
+  if (rpsfirsttime == 1) {
   
-  
+    
   clear_screen();
   vram_adr(NTADR_A(2,2));
   vram_write("UP: ROCK", 8);
@@ -111,6 +115,16 @@ void rpsgame(void) {
   vram_write("A: PAPER", 9);
   vram_adr(NTADR_A(2,6));
   vram_write("B: SCISSOR", 11);
+  rpsfirsttime = 2;
+  }
+  
+  if (pad & PAD_UP || PAD_A || PAD_B) {
+     if (rpsfirsttime == 2) {
+       rpsfirsttime = 3;
+       jeschoice = rand8() % 3;
+     }
+  }
+  
   
   
 
@@ -126,7 +140,7 @@ void main(void) {
   unsigned char pad;
   
   // gamestates: 0: Menu, 1: start seq, 2: game sel 
-  unsigned char gamestate = 0;
+
   
   // set palette colors
   pal_col(0,0x38);	// set screen to dark blue
@@ -142,6 +156,10 @@ void main(void) {
   vram_write("UP: STORY MODE", 14);
   vram_adr(NTADR_A(2,8));		// set address
   vram_write("DOWN: ARCADE MODE", 17);
+  }
+  
+  if (gamestate == 3) {
+    
   }
   // enable PPU rendering (turn on screen)
   ppu_on_all();
