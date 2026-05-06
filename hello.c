@@ -103,7 +103,6 @@ void startingseq(void) {
 
 void rpsgame(void) {
   unsigned char jeschoice;
-  pad = pad_trigger(0);
   
   if (rpsfirsttime == 1) {
   
@@ -116,17 +115,90 @@ void rpsgame(void) {
   vram_adr(NTADR_A(2,6));
   vram_write("B: SCISSOR", 11);
   rpsfirsttime = 2;
+  delaycode(5);
   }
   
-  if (pad & PAD_UP || PAD_A || PAD_B) {
+  if (pad & PAD_UP || pad & PAD_A || pad & PAD_B) {
      if (rpsfirsttime == 2) {
        rpsfirsttime = 3;
        jeschoice = rand8() % 3;
+       delaycode(5);
+       
+       if (jeschoice == 1) {
+         //win
+         vram_adr(NTADR_A(2,10));
+  	 vram_write("YOU WIN!", 8);
+       } else if (jeschoice == 2) {
+         //tie
+         vram_adr(NTADR_A(2,10));
+  	 vram_write("YOU TIE!", 8);
+       } else {
+         //lose
+         vram_adr(NTADR_A(2,10));
+  	 vram_write("YOU LOSE!", 9);
+       }
      }
   }
   
   
-  
+ if (rpsfirsttime == 3) {
+   rpsfirsttime = 4;
+   delaycode(180);
+   clear_screen();
+   vram_adr(NTADR_A(2,2));
+   vram_write("JES: GOOD GAME!", 15);
+   delaycode(1);
+   vram_adr(NTADR_A(2,6));
+   vram_write("WHAT DO YOU WANT TO PLAY?", 25);
+   delaycode(180);
+   clear_screen();
+   vram_adr(NTADR_A(2,2));
+   vram_write("UP: ROCK PAPER SCISSORS", 23);
+   delaycode(120);
+   vram_adr(NTADR_A(2,8));
+   vram_write("Finn: .", 7);
+   delaycode(60);
+   vram_adr(NTADR_A(2,8));
+   vram_write("Finn: ..", 8);
+   delaycode(60);
+   vram_adr(NTADR_A(2,8));
+   vram_write("Finn: ...", 9);
+   delaycode(60);
+   vram_adr(NTADR_A(2,8));
+   vram_write("Finn: Is there anything else?", 29);
+   delaycode(60);
+   vram_adr(NTADR_A(2,10));
+   vram_write("JES: UMMMMMMM...", 16);
+   delaycode(60);
+   vram_adr(NTADR_A(2,10));
+   vram_write("JES: UMMMMMMM... NO?", 20);
+   delaycode(60);
+   vram_adr(NTADR_A(2,12));
+   vram_write("Finn: oh...", 11);
+   delaycode(180);
+   vram_adr(NTADR_A(2,14));
+   vram_write("Finn: I wanna exit...", 21);
+   delaycode(60);
+   vram_adr(NTADR_A(2,16));
+   vram_write("JES: WAIT... NO... DO NOT GO!", 29);
+   delaycode(30);
+   vram_adr(NTADR_A(2,18));
+   vram_write("PLEASE... I CAN... I CAN...", 27);
+   delaycode(30);
+   vram_adr(NTADR_A(2,20));
+   vram_write("I CAN MAKE MORE GAMES!!!", 24);
+   delaycode(30);
+   vram_adr(NTADR_A(2,22));
+   vram_write("PLEASE...", 9);
+   delaycode(60);
+   vram_adr(NTADR_A(2,24));
+   vram_write("FINN: Ummmmm...", 15);
+   delaycode(60);
+   vram_adr(NTADR_A(2,24));
+   vram_write("FINN: Sure     ", 15);
+   delaycode(120);
+   clear_screen();
+ }
 
   
 }
@@ -137,8 +209,8 @@ void rpsgame(void) {
 
 // main function, run after console reset
 void main(void) {
-  unsigned char pad;
-  
+  unsigned int seed = 0;
+  pad = pad_trigger(0);
   // gamestates: 0: Menu, 1: start seq, 2: game sel 
 
   
@@ -171,7 +243,9 @@ void main(void) {
     
     
    if (gamestate == 0) {
+     seed++;
      if (pad & PAD_UP) {
+       set_rand(seed);
        gamestate = 1;
        startingseq();
        gamestate = 2;
@@ -179,6 +253,7 @@ void main(void) {
      }
      
      if (pad & PAD_DOWN) {
+       	set_rand(seed);
      	gamestate = 3;
      }
    }
