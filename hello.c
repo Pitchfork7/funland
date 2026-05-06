@@ -68,6 +68,24 @@ void startingseq() {
         vram_write("JES: Hello FINN", 15);
   	delaycode(120);
   	clear_screen();
+  	vram_adr(NTADR_A(2,2));
+        vram_write("TODAY WE WILL BEING", 19);
+  	vram_adr(NTADR_A(2,4));
+        vram_write("PLAYING A FEW GAMES!", 19);
+  	delaycode(60);
+  	vram_adr(NTADR_A(2,8));
+        vram_write("I CURRENTLY HAVE...", 19);
+  	delaycode(60);
+	vram_adr(NTADR_A(2,10));
+        vram_write("1", 1);
+  	delaycode(60);
+  	vram_adr(NTADR_A(2,12));
+        vram_write("GAME(S)", 7);
+  	delaycode(60);
+  	vram_adr(NTADR_A(2,14));
+        vram_write("WHAT DO YOU WANT TO PLAY", 24);
+  	delaycode(120);
+  	clear_screen();
 }
 
 
@@ -93,6 +111,10 @@ void main(void) {
   vram_write("WELCOME TO FUNLAND!", 19);	// write bytes to video RAM
   vram_adr(NTADR_A(2,4));		// set address
   vram_write("PRESS START TO RUN PROGRAM!", 27);
+  vram_adr(NTADR_A(2,6));		// set address
+  vram_write("UP: STORY MODE", 14);
+  vram_adr(NTADR_A(2,8));		// set address
+  vram_write("DOWN: ARCADE MODE", 17);
   }
   // enable PPU rendering (turn on screen)
   ppu_on_all();
@@ -109,11 +131,10 @@ void main(void) {
     
    // inputs
    if (pad & PAD_UP) {
+      if (gamestate == 0) {
       // 1. Tell the PPU where to write
-      vram_adr(NTADR_A(2,2));
-      
-      // 2. Write "UP" and add spaces to clear out "HI THERE!"
-      vram_write("UP       ", 9); 
+      	gamestate = 1;
+        startingseq();
     }
     
     if (pad & PAD_DOWN) {
@@ -140,10 +161,7 @@ void main(void) {
     }
     
     if (pad & PAD_START) {
-      if (gamestate == 0) {
-      // 1. Tell the PPU where to write
-      	gamestate = 1;
-        startingseq();
+      
         
       }
     }
