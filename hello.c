@@ -100,6 +100,7 @@ void startingseq(void) {
 // games
 
 void rps(void) {
+  unsigned char choice = rand8() % 3;
   
 }
 
@@ -111,7 +112,7 @@ void rps(void) {
 void main(void) {
   unsigned char pad;
   
-  // gamestates: 0: Menu, 1, start seq, 2: game sel 
+  // gamestates: 0: Menu, 1: start seq, 2: game sel 
   unsigned char gamestate = 0;
   
   // set palette colors
@@ -140,55 +141,35 @@ void main(void) {
    pad = pad_trigger(0);
     
     
-    
-    
-    
-   // inputs
-   if (pad & PAD_UP) {
-      if (gamestate == 0) {
-      // 1. Tell the PPU where to write
-        gamestate = 1;
-        startingseq();
-        gamestate = 2;
+   if (gamestate == 0) {
+     if (pad & PAD_UP) {
+       gamestate = 1;
+       startingseq();
+       gamestate = 2;
+       gamesel();
+     }
+     
+     if (pad & PAD_DOWN) {
+     	gamestate = 2;
         gamesel();
-    }
-      if (gamestate == 2) {
-        clear_screen();
-        vram_adr(NTADR_A(2,2));		// set address
-  	vram_write("ROCK PAPER SCISSORS", 19);
-        delaycode(60);
-      }
+     }
    }
     
-    if (pad & PAD_DOWN) {
-      if (gamestate == 0) {
-      // 1. Tell the PPU where to write
-        gamestate = 2;
-        gamesel();
-    }
-    }
-    
-    if (pad & PAD_LEFT) {
-      // 1. Tell the PPU where to write
-      vram_adr(NTADR_A(2,2));
-      
-      // 2. Write "UP" and add spaces to clear out "HI THERE!"
-      vram_write("LEFT     ", 9); 
-    }
-    if (pad & PAD_RIGHT) {
-      // 1. Tell the PPU where to write
-      vram_adr(NTADR_A(2,2));
-      
-      // 2. Write "UP" and add spaces to clear out "HI THERE!"
-      vram_write("RIGHT    ", 9); 
-    }
-    
-    if (pad & PAD_START) {
-      
-        
-      }
     
     
-  }
+    
+   if (gamestate == 2) {
+     if (pad & PAD_UP) { 
+       gamestate = 3;
+     }
+   }
+    
+   if (gamestate == 3) {
+     
+   }
+    
+    
+   
+    }
     
 }
