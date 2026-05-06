@@ -99,8 +99,21 @@ void startingseq(void) {
 
 // games
 
-void rps(void) {
+void rpsgame(void) {
   unsigned char choice = rand8() % 3;
+  
+  
+  
+  clear_screen();
+  vram_adr(NTADR_A(2,2));
+  vram_write("UP: ROCK", 8);
+  vram_adr(NTADR_A(2,4));
+  vram_write("A: PAPER", 9);
+  vram_adr(NTADR_A(2,6));
+  vram_write("B: SCISSOR", 11);
+  
+  
+
   
 }
 
@@ -116,8 +129,8 @@ void main(void) {
   unsigned char gamestate = 0;
   
   // set palette colors
-  pal_col(0,0x02);	// set screen to dark blue
-  pal_col(1,0x14);	// fuchsia
+  pal_col(0,0x38);	// set screen to dark blue
+  pal_col(1,0x17);	// fuchsia
   pal_col(2,0x20);	// grey
   pal_col(3,0x30);	// white
 
@@ -148,8 +161,7 @@ void main(void) {
      }
      
      if (pad & PAD_DOWN) {
-     	gamestate = 2;
-        gamesel();
+     	gamestate = 3;
      }
    }
     
@@ -163,7 +175,7 @@ void main(void) {
    }
     
    if (gamestate == 3) {
-     
+     rpsgame();
    }
     
     
