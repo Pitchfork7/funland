@@ -125,8 +125,6 @@ void main(void) {
   if (gamestate == 0) {
   vram_adr(NTADR_A(2,2));		// set address
   vram_write("WELCOME TO FUNLAND!", 19);	// write bytes to video RAM
-  vram_adr(NTADR_A(2,4));		// set address
-  vram_write("PRESS START TO RUN PROGRAM!", 27);
   vram_adr(NTADR_A(2,6));		// set address
   vram_write("UP: STORY MODE", 14);
   vram_adr(NTADR_A(2,8));		// set address
