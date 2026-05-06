@@ -25,7 +25,14 @@ void clear_screen(void) {
   ppu_on_all();
 }
 
-void startingseq() {
+void gamesel(void) {
+  clear_screen();
+  vram_adr(NTADR_A(2,2));
+  vram_write("UP: ROCK PAPER SCISSORS", 23);
+}
+
+void startingseq(void) {
+  
   clear_screen();
         vram_adr(NTADR_A(2,2));
         vram_write("STARTING...", 11);
@@ -85,7 +92,7 @@ void startingseq() {
   	vram_adr(NTADR_A(2,14));
         vram_write("WHAT DO YOU WANT TO PLAY", 24);
   	delaycode(120);
-  	clear_screen();
+  	
 }
 
 
@@ -96,7 +103,7 @@ void startingseq() {
 void main(void) {
   unsigned char pad;
   
-  // gamestates: 0: Menu,  
+  // gamestates: 0: Menu, 1, start seq, 2: game sel 
   unsigned char gamestate = 0;
   
   // set palette colors
@@ -122,8 +129,7 @@ void main(void) {
   // infinite loop
   while (1) {
    ppu_wait_nmi();
-   pad = pad_poll(0);
-   
+   pad = pad_trigger(0);
     
     
     
@@ -133,16 +139,25 @@ void main(void) {
    if (pad & PAD_UP) {
       if (gamestate == 0) {
       // 1. Tell the PPU where to write
-      	gamestate = 1;
+        gamestate = 1;
         startingseq();
+        gamestate = 2;
+        gamesel();
     }
+      if (gamestate == 2) {
+        clear_screen();
+        vram_adr(NTADR_A(2,2));		// set address
+  	vram_write("UP: ROCK PAPER SCISSORS", 23);
+        delaycode(60);
+      }
+   }
     
     if (pad & PAD_DOWN) {
+      if (gamestate == 0) {
       // 1. Tell the PPU where to write
-      vram_adr(NTADR_A(2,2));
-      
-      // 2. Write "UP" and add spaces to clear out "HI THERE!"
-      vram_write("DOWN     ", 9); 
+        gamestate = 2;
+        gamesel();
+    }
     }
     
     if (pad & PAD_LEFT) {
@@ -164,7 +179,7 @@ void main(void) {
       
         
       }
-    }
+    
     
   }
     
