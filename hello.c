@@ -13,10 +13,17 @@ unsigned char gamestate = 0;
 unsigned char pad;
 // link the pattern table into CHR ROM
 //#link "chr_generic.s"
+
+void wait_for_release(void) {
+  while (pad_poll(0)) { // While ANY button is being held...
+    ppu_wait_nmi();     // Just wait and do nothing
+  }
+}
+
 void delaycode(unsigned char frames) {
   while (frames > 0) {
     ppu_wait_nmi();
-    frames--;
+    frames--;	
   }
 }
 
@@ -31,6 +38,7 @@ void gamesel(void) {
   clear_screen();
   vram_adr(NTADR_A(2,2));
   vram_write("UP: ROCK PAPER SCISSORS", 23);
+  pad = 0;
 }
 
 void startingseq(void) {
@@ -123,11 +131,12 @@ void rpsgame(void) {
        rpsfirsttime = 3;
        jeschoice = rand8() % 3;
        delaycode(5);
-       
+       wait_for_release();
        if (jeschoice == 1) {
          //win
          vram_adr(NTADR_A(2,10));
   	 vram_write("YOU WIN!", 8);
+         
        } else if (jeschoice == 2) {
          //tie
          vram_adr(NTADR_A(2,10));
@@ -245,16 +254,19 @@ void main(void) {
    if (gamestate == 0) {
      seed++;
      if (pad & PAD_UP) {
+       wait_for_release();
        set_rand(seed);
        gamestate = 1;
        startingseq();
        gamestate = 2;
        gamesel();
+       pad = 0;
      }
      
      if (pad & PAD_DOWN) {
        	set_rand(seed);
      	gamestate = 3;
+        pad = 0;
      }
    }
     
@@ -263,7 +275,9 @@ void main(void) {
     
    if (gamestate == 2) {
      if (pad & PAD_UP) { 
+       wait_for_release();
        gamestate = 3;
+       pad = 0;
      }
    }
     
